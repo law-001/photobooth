@@ -14,14 +14,31 @@ const LAYOUTS = {
   single: { label: "Single shot", cols: 1, rows: 1, ar: 4 / 3, slots: 1 },
 };
 
+// `css` drives the live preview; `ops` drives the pixel-based pass used when
+// compositing (ctx.filter is unsupported on iOS Safari < 17 / older webviews).
 const FILTERS = [
-  { id: "original", label: "Original", css: "none" },
-  { id: "bw", label: "B&W", css: "grayscale(1) contrast(1.05)" },
-  { id: "sepia", label: "Sepia", css: "sepia(0.78) contrast(1.02)" },
-  { id: "vintage", label: "Vintage", css: "sepia(0.42) contrast(1.1) saturate(1.25) brightness(1.02)" },
-  { id: "cool", label: "Cool", css: "saturate(1.25) hue-rotate(-12deg) brightness(1.02)" },
-  { id: "punch", label: "Vivid", css: "contrast(1.4) saturate(1.32)" },
-  { id: "glow", label: "Soft glow", css: "brightness(1.12) contrast(0.94) saturate(1.08) blur(0.4px)" },
+  { id: "original", label: "Original", css: "none", ops: null },
+  { id: "bw", label: "B&W", css: "grayscale(1) contrast(1.05)", ops: { grayscale: 1, contrast: 1.05 } },
+  { id: "sepia", label: "Sepia", css: "sepia(0.78) contrast(1.02)", ops: { sepia: 0.78, contrast: 1.02 } },
+  {
+    id: "vintage",
+    label: "Vintage",
+    css: "sepia(0.42) contrast(1.1) saturate(1.25) brightness(1.02)",
+    ops: { sepia: 0.42, contrast: 1.1, saturate: 1.25, brightness: 1.02 },
+  },
+  {
+    id: "cool",
+    label: "Cool",
+    css: "saturate(1.25) hue-rotate(-12deg) brightness(1.02)",
+    ops: { saturate: 1.25, hueRotate: -12, brightness: 1.02 },
+  },
+  { id: "punch", label: "Vivid", css: "contrast(1.4) saturate(1.32)", ops: { contrast: 1.4, saturate: 1.32 } },
+  {
+    id: "glow",
+    label: "Soft glow",
+    css: "brightness(1.12) contrast(0.94) saturate(1.08) blur(0.4px)",
+    ops: { brightness: 1.12, contrast: 0.94, saturate: 1.08 },
+  },
 ];
 
 // pastel frame colours
@@ -162,6 +179,95 @@ export default class App extends React.Component {
   filterCss() {
     const f = FILTERS.find((x) => x.id === this.state.filterId);
     return f ? f.css : "none";
+  }
+  filterOps(id) {
+    const f = FILTERS.find((x) => x.id === id);
+    return f ? f.ops : null;
+  }
+  hueMatrix(a) {
+    const c = Math.cos(a),
+      s = Math.sin(a);
+    return [
+      0.213 + c * 0.787 - s * 0.213,
+      0.715 - c * 0.715 - s * 0.715,
+      0.072 - c * 0.072 + s * 0.928,
+      0.213 - c * 0.213 + s * 0.143,
+      0.715 + c * 0.285 + s * 0.14,
+      0.072 - c * 0.072 - s * 0.283,
+      0.213 - c * 0.213 - s * 0.787,
+      0.715 - c * 0.715 + s * 0.715,
+      0.072 + c * 0.928 + s * 0.072,
+    ];
+  }
+  // pixel-based filter — works on every browser (unlike ctx.filter)
+  applyFilter(data, id) {
+    const o = this.filterOps(id);
+    if (!o) return;
+    const hue = o.hueRotate ? this.hueMatrix((o.hueRotate * Math.PI) / 180) : null;
+    const cl = (v) => (v < 0 ? 0 : v > 255 ? 255 : v);
+    for (let i = 0; i < data.length; i += 4) {
+      let r = data[i],
+        g = data[i + 1],
+        b = data[i + 2];
+      if (o.brightness) {
+        r *= o.brightness;
+        g *= o.brightness;
+        b *= o.brightness;
+      }
+      if (o.contrast) {
+        r = (r - 128) * o.contrast + 128;
+        g = (g - 128) * o.contrast + 128;
+        b = (b - 128) * o.contrast + 128;
+      }
+      if (o.grayscale) {
+        const l = 0.2126 * r + 0.7152 * g + 0.0722 * b,
+          a = o.grayscale;
+        r += (l - r) * a;
+        g += (l - g) * a;
+        b += (l - b) * a;
+      }
+      if (o.sepia) {
+        const a = o.sepia;
+        const sr = r * 0.393 + g * 0.769 + b * 0.189;
+        const sg = r * 0.349 + g * 0.686 + b * 0.168;
+        const sb = r * 0.272 + g * 0.534 + b * 0.131;
+        r += (sr - r) * a;
+        g += (sg - g) * a;
+        b += (sb - b) * a;
+      }
+      if (o.saturate) {
+        const l = 0.2126 * r + 0.7152 * g + 0.0722 * b,
+          sat = o.saturate;
+        r = l + (r - l) * sat;
+        g = l + (g - l) * sat;
+        b = l + (b - l) * sat;
+      }
+      if (hue) {
+        const nr = hue[0] * r + hue[1] * g + hue[2] * b;
+        const ng = hue[3] * r + hue[4] * g + hue[5] * b;
+        const nb = hue[6] * r + hue[7] * g + hue[8] * b;
+        r = nr;
+        g = ng;
+        b = nb;
+      }
+      data[i] = cl(r);
+      data[i + 1] = cl(g);
+      data[i + 2] = cl(b);
+    }
+  }
+  // render an image through the active filter into its own canvas
+  applyImgFilter(im, id) {
+    const w = im.naturalWidth || im.width,
+      h = im.naturalHeight || im.height;
+    const t = document.createElement("canvas");
+    t.width = w;
+    t.height = h;
+    const tx = t.getContext("2d", { willReadFrequently: true });
+    tx.drawImage(im, 0, 0);
+    const idata = tx.getImageData(0, 0, w, h);
+    this.applyFilter(idata.data, id);
+    tx.putImageData(idata, 0, 0);
+    return t;
   }
   burstN() {
     return Math.max(3, Math.min(14, BURST_FRAMES));
@@ -540,14 +646,14 @@ export default class App extends React.Component {
         cx.save();
         this.roundRect(cx, x, y, g.slotW, g.slotH, g.r);
         cx.clip();
-        cx.filter = css === "none" ? "none" : css;
         const im = imgs[k];
-        if (im) cx.drawImage(im, x, y, g.slotW, g.slotH);
-        else {
+        if (im) {
+          const src = css === "none" ? im : this.applyImgFilter(im, this.state.filterId);
+          cx.drawImage(src, x, y, g.slotW, g.slotH);
+        } else {
           cx.fillStyle = "#cdc2b2";
           cx.fillRect(x, y, g.slotW, g.slotH);
         }
-        cx.filter = "none";
         cx.restore();
         cx.strokeStyle = "rgba(0,0,0,0.12)";
         cx.lineWidth = g.hair;
@@ -594,10 +700,10 @@ export default class App extends React.Component {
       const delay = Math.max(40, Math.min(220, GIF_DELAY));
       for (const im of imgs) {
         cx.clearRect(0, 0, w, h);
-        cx.filter = css === "none" ? "none" : css;
         cx.drawImage(im, 0, 0, w, h);
-        cx.filter = "none";
-        const data = cx.getImageData(0, 0, w, h).data;
+        const idata = cx.getImageData(0, 0, w, h);
+        if (css !== "none") this.applyFilter(idata.data, this.state.filterId);
+        const data = idata.data;
         const pal = quantize(data, 256);
         const idx = applyPalette(data, pal);
         enc.writeFrame(idx, w, h, { palette: pal, delay });
