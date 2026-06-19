@@ -28,3 +28,518 @@ button {
     transform: rotate(360deg);
   }
 }
+
+/* ── Small phones (≤ 430px) ── */
+@media (max-width: 430px) {
+  .pb-outer {
+    padding: 6px !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    min-height: 100svh !important;
+  }
+
+  /* Ensure inner container takes full available width */
+  .pb-outer > div {
+    width: 100% !important;
+  }
+
+  /* Cabinet shell: strip side padding, tighten radius */
+  .pb-cabinet {
+    padding: 8px !important;
+    border-radius: 18px 18px 12px 12px !important;
+  }
+
+  /* Marquee banner */
+  .pb-top-bar {
+    font-size: 10px !important;
+    letter-spacing: 3px !important;
+    padding: 6px 0 !important;
+    border-radius: 12px 12px 3px 3px !important;
+  }
+
+  /* Decorative fringe strips under marquee */
+  .pb-col-deco > div {
+    height: 10px !important;
+  }
+
+  /* Curtain side bars → thinner */
+  .pb-curtain {
+    width: 14px !important;
+  }
+
+  /* Inner white card */
+  .pb-inner {
+    border-radius: 10px !important;
+  }
+
+  /* Header row: less padding, smaller type */
+  .pb-header {
+    padding: 9px 12px !important;
+  }
+  .pb-header-icon {
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 9px !important;
+  }
+  .pb-header-title {
+    font-size: 14px !important;
+  }
+  .pb-header-sub {
+    font-size: 9px !important;
+    letter-spacing: 1.2px !important;
+  }
+  .pb-header-status {
+    font-size: 10px !important;
+  }
+  .pb-header-dot {
+    width: 6px !important;
+    height: 6px !important;
+  }
+
+  /* Body: single column, tight gap */
+  .pb-body {
+    padding: 10px !important;
+    gap: 10px !important;
+    flex-direction: column !important;
+  }
+
+  /* Camera viewport: shorter on small screens */
+  .pb-viewport {
+    flex: none !important;
+    width: 100% !important;
+    /* ~56 vw tall instead of full 4:3 */
+    aspect-ratio: 4 / 2.6 !important;
+    border-radius: 12px !important;
+    min-width: 0 !important;
+  }
+
+  /* Countdown number: scale down */
+  .pb-count-num {
+    font-size: 90px !important;
+  }
+
+  /* Progress pill */
+  .pb-progress {
+    font-size: 10px !important;
+    padding: 4px 10px !important;
+    letter-spacing: 1px !important;
+  }
+
+  /* Side panel: full width, no min/max constraints */
+  .pb-panel {
+    flex: none !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+  }
+
+  /* Section label */
+  .pb-label {
+    font-size: 9px !important;
+    letter-spacing: 1.2px !important;
+    margin-bottom: 6px !important;
+  }
+
+  /* Layout cards: two-up grid */
+  .pb-layout-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 6px !important;
+  }
+  .pb-layout-btn {
+    flex: none !important;
+    padding: 7px 9px !important;
+  }
+  .pb-layout-btn-title {
+    font-size: 11.5px !important;
+  }
+  .pb-layout-btn-sub {
+    font-size: 10px !important;
+  }
+
+  /* Filter / countdown pills: wrap tighter */
+  .pb-pill {
+    padding: 5px 10px !important;
+    font-size: 11.5px !important;
+  }
+
+  /* Flip / Sound row */
+  .pb-row-btns {
+    gap: 6px !important;
+  }
+  .pb-row-btns button {
+    font-size: 12px !important;
+    padding: 8px 10px !important;
+  }
+
+  /* Primary CTA */
+  .pb-start-btn {
+    font-size: 13.5px !important;
+    padding: 11px 14px !important;
+    border-radius: 12px !important;
+  }
+
+  /* Review stage: "Looking good!" heading */
+  .pb-review-heading {
+    font-size: 16px !important;
+  }
+
+  /* Swatch circles */
+  .pb-swatch {
+    width: 24px !important;
+    height: 24px !important;
+  }
+
+  /* GIF preview card */
+  .pb-gif-thumb {
+    width: 76px !important;
+  }
+
+  /* Ghost retake btn */
+  .pb-ghost-btn {
+    font-size: 13px !important;
+    padding: 9px !important;
+  }
+
+  /* Capturing panel text */
+  .pb-capture-heading {
+    font-size: 18px !important;
+  }
+  .pb-capture-body {
+    font-size: 12.5px !important;
+  }
+
+  /* Progress dots */
+  .pb-dot {
+    width: 8px !important;
+    height: 8px !important;
+  }
+}
+
+/* ── Very small phones (≤ 360px, e.g. Galaxy A series) ── */
+@media (max-width: 360px) {
+  .pb-outer {
+    padding: 4px !important;
+    align-items: center !important;
+  }
+  .pb-cabinet {
+    padding: 5px !important;
+  }
+  .pb-curtain {
+    width: 10px !important;
+  }
+  .pb-viewport {
+    aspect-ratio: 4 / 2.4 !important;
+  }
+  .pb-body {
+    padding: 8px !important;
+    gap: 8px !important;
+  }
+  .pb-pill {
+    padding: 4px 8px !important;
+    font-size: 11px !important;
+  }
+  .pb-layout-btn {
+    padding: 6px 7px !important;
+  }
+  .pb-layout-btn-title {
+    font-size: 11px !important;
+  }
+  .pb-count-num {
+    font-size: 72px !important;
+  }
+}
+
+/* ── Ultra-small phones (≤ 320px, e.g. Galaxy Fold outer, iPhone 4, old budget Androids) ── */
+@media (max-width: 320px) {
+  /* Outermost shell: zero side padding, hug the edges */
+  .pb-outer {
+    padding: 2px !important;
+    align-items: stretch !important;
+  }
+
+  /* Cabinet: minimal padding, tighter radius */
+  .pb-cabinet {
+    padding: 4px !important;
+    border-radius: 12px 12px 8px 8px !important;
+  }
+
+  /* Marquee banner: smaller font, tighter spacing */
+  .pb-top-bar {
+    font-size: 8px !important;
+    letter-spacing: 2px !important;
+    padding: 5px 0 !important;
+    border-radius: 9px 9px 2px 2px !important;
+  }
+
+  /* Decorative fringe strips */
+  .pb-col-deco > div {
+    height: 7px !important;
+  }
+
+  /* Curtain side bars: hide entirely to reclaim width */
+  .pb-curtain {
+    display: none !important;
+  }
+
+  /* Inner white card: full-width, minimal radius */
+  .pb-inner {
+    border-radius: 8px !important;
+  }
+
+  /* Header row */
+  .pb-header {
+    padding: 7px 9px !important;
+    flex-wrap: wrap !important;
+    gap: 4px !important;
+  }
+  .pb-header-icon {
+    width: 24px !important;
+    height: 24px !important;
+    border-radius: 7px !important;
+  }
+  .pb-header-title {
+    font-size: 12px !important;
+  }
+  .pb-header-sub {
+    font-size: 8px !important;
+    letter-spacing: 0.8px !important;
+  }
+  .pb-header-status {
+    font-size: 9px !important;
+  }
+  .pb-header-dot {
+    width: 5px !important;
+    height: 5px !important;
+  }
+
+  /* Body: single column, minimal gap */
+  .pb-body {
+    padding: 7px !important;
+    gap: 8px !important;
+    flex-direction: column !important;
+  }
+
+  /* Camera viewport: very shallow to leave room for controls */
+  .pb-viewport {
+    flex: none !important;
+    width: 100% !important;
+    aspect-ratio: 4 / 2.2 !important;
+    border-radius: 9px !important;
+    min-width: 0 !important;
+  }
+
+  /* Countdown number */
+  .pb-count-num {
+    font-size: 56px !important;
+  }
+
+  /* Progress pill */
+  .pb-progress {
+    font-size: 9px !important;
+    padding: 3px 8px !important;
+    letter-spacing: 0.8px !important;
+  }
+
+  /* Side panel: full width */
+  .pb-panel {
+    flex: none !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+  }
+
+  /* Section label */
+  .pb-label {
+    font-size: 8px !important;
+    letter-spacing: 0.8px !important;
+    margin-bottom: 5px !important;
+  }
+
+  /* Layout cards: two-up grid, very tight */
+  .pb-layout-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 4px !important;
+  }
+  .pb-layout-btn {
+    flex: none !important;
+    padding: 5px 6px !important;
+  }
+  .pb-layout-btn-title {
+    font-size: 10px !important;
+  }
+  .pb-layout-btn-sub {
+    font-size: 9px !important;
+  }
+
+  /* Filter / countdown pills */
+  .pb-pill {
+    padding: 3px 7px !important;
+    font-size: 10px !important;
+  }
+
+  /* Flip / Sound row */
+  .pb-row-btns {
+    gap: 4px !important;
+  }
+  .pb-row-btns button {
+    font-size: 11px !important;
+    padding: 7px 8px !important;
+  }
+
+  /* Primary CTA */
+  .pb-start-btn {
+    font-size: 12.5px !important;
+    padding: 10px 12px !important;
+    border-radius: 10px !important;
+  }
+
+  /* Review stage heading */
+  .pb-review-heading {
+    font-size: 14px !important;
+  }
+
+  /* Swatch circles: smaller */
+  .pb-swatch {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  /* GIF preview thumb */
+  .pb-gif-thumb {
+    width: 60px !important;
+  }
+
+  /* Ghost retake btn */
+  .pb-ghost-btn {
+    font-size: 12px !important;
+    padding: 8px !important;
+  }
+
+  /* Capturing panel text */
+  .pb-capture-heading {
+    font-size: 15px !important;
+  }
+  .pb-capture-body {
+    font-size: 11.5px !important;
+  }
+
+  /* Progress dots */
+  .pb-dot {
+    width: 6px !important;
+    height: 6px !important;
+  }
+}
+
+/* ── Micro screens (≤ 280px, e.g. Galaxy Z Fold outer cover, very old devices) ── */
+@media (max-width: 280px) {
+  .pb-outer {
+    padding: 1px !important;
+  }
+
+  .pb-cabinet {
+    padding: 3px !important;
+    border-radius: 8px 8px 6px 6px !important;
+  }
+
+  /* Hide decorative marquee to save vertical space */
+  .pb-top-bar {
+    display: none !important;
+  }
+  .pb-col-deco {
+    display: none !important;
+  }
+
+  .pb-header {
+    padding: 6px 7px !important;
+  }
+  .pb-header-title {
+    font-size: 11px !important;
+  }
+  .pb-header-sub {
+    display: none !important;
+  }
+
+  /* Even shallower viewport */
+  .pb-viewport {
+    aspect-ratio: 4 / 2 !important;
+    border-radius: 7px !important;
+  }
+
+  .pb-body {
+    padding: 5px !important;
+    gap: 6px !important;
+  }
+
+  .pb-count-num {
+    font-size: 44px !important;
+  }
+
+  .pb-pill {
+    padding: 2px 5px !important;
+    font-size: 9.5px !important;
+  }
+
+  .pb-layout-btn-title {
+    font-size: 9.5px !important;
+  }
+  .pb-layout-btn-sub {
+    display: none !important;
+  }
+
+  .pb-row-btns button {
+    font-size: 10.5px !important;
+    padding: 6px 6px !important;
+  }
+
+  .pb-start-btn {
+    font-size: 11.5px !important;
+    padding: 9px 10px !important;
+  }
+
+  .pb-swatch {
+    width: 17px !important;
+    height: 17px !important;
+  }
+
+  .pb-gif-thumb {
+    width: 48px !important;
+  }
+
+  .pb-capture-heading {
+    font-size: 13px !important;
+  }
+  .pb-capture-body {
+    font-size: 10.5px !important;
+  }
+
+  .pb-dot {
+    width: 5px !important;
+    height: 5px !important;
+  }
+
+  .pb-label {
+    font-size: 7.5px !important;
+    letter-spacing: 0.5px !important;
+  }
+}
+
+/* ── Landscape phones ── */
+@media (max-width: 700px) and (orientation: landscape) {
+  .pb-body {
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+  }
+  .pb-viewport {
+    flex: 0 0 48% !important;
+    aspect-ratio: 4 / 3 !important;
+  }
+  .pb-panel {
+    flex: 1 1 0 !important;
+    overflow-y: auto !important;
+    max-height: calc(100svh - 80px) !important;
+  }
+}
